@@ -1,24 +1,24 @@
 // pages/index.js
-import Head from 'next/head';
-import { useState, useEffect } from 'react';
-import MatrixRain     from '../components/MatrixRain';
-import Navbar         from '../components/Navbar';
-import Hero           from '../components/Hero';
-import About          from '../components/About';
-import Skills         from '../components/Skills';
-import Experience     from '../components/Experience';
-import Projects       from '../components/Projects';
-import Certifications from '../components/Certifications';
-import Contact        from '../components/Contact';
+import Head from 'next/head'
+import { useState, useEffect } from 'react'
+import MatrixRain     from '../components/MatrixRain'
+import Navbar         from '../components/Navbar'
+import Hero           from '../components/Hero'
+import About          from '../components/About'
+import Skills         from '../components/Skills'
+import Experience     from '../components/Experience'
+import Projects       from '../components/Projects'
+import Certifications from '../components/Certifications'
+import Contact        from '../components/Contact'
 
 export default function Home() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Show loader for 4s
-    const timer = setTimeout(() => setLoading(false), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+    // Show loader for 2 seconds
+    const timer = setTimeout(() => setLoading(false), 2000)
+    return () => clearTimeout(timer)
+  }, [])
 
   return (
     <>
@@ -52,5 +52,5 @@ export default function Home() {
         )}
       </div>
     </>
-  );
+  )
 }
