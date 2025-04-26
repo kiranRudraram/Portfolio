@@ -35,21 +35,25 @@ export default function Home() {
         {/* Sticky Navbar */}
         <Navbar />
 
-        {loading ? (
-          <div className="relative min-h-screen overflow-hidden">
-            <MatrixRain />
-          </div>
-        ) : (
-          <>
-            <Hero />
-            <About />
-            <Skills />
-            <Experience />
-            <Projects />
-            <Certifications />
-            <Contact />
-          </>
-        )}
+        {/* Scroll container: full‐screen, smooth scrolling, vertical snap */}
+        <div className="h-screen overflow-y-auto scroll-smooth snap-y snap-mandatory">
+          {loading ? (
+            // loader also participates in snap
+            <div className="relative min-h-screen overflow-hidden snap-start">
+              <MatrixRain />
+            </div>
+          ) : (
+            <>
+              <div className="snap-start"><Hero /></div>
+              <div className="snap-start"><About /></div>
+              <div className="snap-start"><Skills /></div>
+              <div className="snap-start"><Experience /></div>
+              <div className="snap-start"><Projects /></div>
+              <div className="snap-start"><Certifications /></div>
+              <div className="snap-start"><Contact /></div>
+            </>
+          )}
+        </div>
       </div>
     </>
   )

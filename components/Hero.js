@@ -1,26 +1,63 @@
 // components/Hero.js
-import { useState } from 'react';
-import NetworkGlobe from './NetworkGlobe';
-import DecryptText from './DecryptText';
-import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import NetworkGlobe from './NetworkGlobe'
+import DecryptText  from './DecryptText'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline'
 
 export default function Hero() {
-  const [taglineUnlocked, setTaglineUnlocked] = useState(false);
-  const tagline = 'Cybersecurity | AppSec | Cloud Security | Vulnerability & Risk Mgmt';
-  // each letter reveal delay so full tagline finishes in ~2s
-  const revealDelay = Math.floor(2000 / tagline.length);
+  const [taglineUnlocked, setTaglineUnlocked] = useState(false)
+  const tagline =
+    'Cybersecurity | AppSec | Cloud Security | Vulnerability & Risk Mgmt'
+  const revealDelay = Math.floor(2000 / tagline.length)
+
+  // normalized mouse position (-1 → 1)
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
+  const handleMouseMove = (e) => {
+    const x = (e.clientX / window.innerWidth  - 0.5) * 2
+    const y = (e.clientY / window.innerHeight - 0.5) * 2
+    setMousePos({ x, y })
+  }
+
+  // parallax intensity
+  const BG_FACTOR = 10
+  const FG_FACTOR = 30
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
-      {/* 3D network globe background */}
-      <NetworkGlobe />
+    <section
+      id="hero"
+      className="relative h-screen w-full overflow-hidden"
+      onMouseMove={handleMouseMove}
+      style={{ perspective: 800 }}
+    >
+      {/* 1) Parallax background layer */}
+      <motion.div
+        style={{
+          x: mousePos.x * BG_FACTOR,
+          y: mousePos.y * BG_FACTOR,
+        }}
+        className="absolute inset-0"
+      >
+        <NetworkGlobe />
+      </motion.div>
 
-      {/* dark overlay for contrast */}
-      <div className="absolute inset-0 bg-black/60" />
+      {/* 2) Overlay */}
+      <motion.div
+        style={{
+          x: mousePos.x * BG_FACTOR * 0.5,
+          y: mousePos.y * BG_FACTOR * 0.5,
+        }}
+        className="absolute inset-0 bg-black/60"
+      />
 
-      {/* your name + lock/tagline on top */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center space-y-6">
-        {/* 💥 Name Reveal */}
+      {/* 3) Foreground content */}
+      <motion.div
+        style={{
+          x: -mousePos.x * FG_FACTOR,
+          y: -mousePos.y * FG_FACTOR,
+        }}
+        className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center space-y-6"
+      >
         <DecryptText
           text="Sai Kiran Rudraram"
           scrambleSpeed={50}
@@ -28,7 +65,6 @@ export default function Hero() {
           className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white"
         />
 
-        {/* 🔐 Lock + “Unlock Me” / Tagline */}
         <div className="flex items-center space-x-4">
           {!taglineUnlocked ? (
             <LockClosedIcon
@@ -43,9 +79,14 @@ export default function Hero() {
           )}
 
           {!taglineUnlocked ? (
-            <span className="px-4 py-2 bg-white/10 rounded uppercase font-semibold text-white">
+            <motion.span
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="px-4 py-2 bg-white/10 rounded uppercase font-semibold text-white"
+            >
               UNLOCK ME
-            </span>
+            </motion.span>
           ) : (
             <DecryptText
               text={tagline}
@@ -55,7 +96,7 @@ export default function Hero() {
             />
           )}
         </div>
-      </div>
+      </motion.div>
     </section>
-  );
+  )
 }
