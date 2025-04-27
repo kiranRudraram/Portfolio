@@ -4,11 +4,25 @@
 @tailwind components;
 @tailwind utilities;
 
+/* in globals.css (already present) */
+.snap-y { scroll-snap-type: y mandatory; }
+.snap-start { scroll-snap-align: start; }
+
 /* terminal cursor blink */
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50%      { opacity: 0; }
 }
+
+/* hide scrollbar for our detail pane */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;             /* Chrome, Safari, Opera */
+}
+
 
 @keyframes expand {
   from { width: 0; }
@@ -39,6 +53,11 @@
 
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
+}
+
+/* make our custom scroll container respond to hash-anchors */
+#scroll-container {
+  scroll-behavior: smooth;
 }
 
 

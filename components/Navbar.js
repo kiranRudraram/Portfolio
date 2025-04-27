@@ -16,37 +16,36 @@ export default function Navbar() {
   const [scrolled, setScrolled]           = useState(false)
   const [activeSection, setActiveSection] = useState('hero')
 
-  // fade-in background once you scroll past the hero block
   useEffect(() => {
-    const onScrollBg = () => setScrolled(window.scrollY > window.innerHeight - 100)
-    window.addEventListener('scroll', onScrollBg)
-    onScrollBg()
-    return () => window.removeEventListener('scroll', onScrollBg)
-  }, [])
+    const container = document.getElementById('scroll-container')
+    if (!container) return
 
-  // scroll-spy: watch when each section’s midpoint enters the viewport
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
-          }
-        })
-      },
-      {
-        root: null,
-        rootMargin: '-50% 0px -50% 0px',
-        threshold: 0
+    const onScroll = () => {
+      // fade‐in navbar background once we leave hero
+      setScrolled(container.scrollTop > window.innerHeight - 100)
+
+      // scroll-spy: pick the section whose midpoint is in view
+      const mid = container.clientHeight / 2
+      for (let { id } of sections) {
+        const el = document.getElementById(id)
+        if (!el) continue
+        const rect = el.getBoundingClientRect()
+        const cRect = container.getBoundingClientRect()
+
+        // top relative to container
+        const top = rect.top - cRect.top
+        const bottom = top + rect.height
+
+        if (top <= mid && bottom > mid) {
+          setActiveSection(id)
+          break
+        }
       }
-    )
+    }
 
-    sections.forEach(({ id }) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
+    container.addEventListener('scroll', onScroll, { passive: true })
+    onScroll() // initial highlight
+    return () => container.removeEventListener('scroll', onScroll)
   }, [])
 
   return (
@@ -59,10 +58,10 @@ export default function Navbar() {
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* logo */}
           <div className="text-white font-bold text-xl">SKR</div>
 
-          {/* Desktop links */}
+          {/* links */}
           <div className="hidden md:flex space-x-6">
             {sections.map(({ id, label }) => {
               const isActive = activeSection === id
@@ -70,13 +69,12 @@ export default function Navbar() {
                 <Link
                   key={id}
                   href={`#${id}`}
-                  className={`
-                    relative px-1 py-1 font-medium transition-colors duration-300
-                    ${isActive
+                  scroll={false}
+                  className={`relative px-1 py-1 font-medium transition-colors duration-300 ${
+                    isActive
                       ? 'text-[#39FF14] drop-shadow-[0_0_8px_#39FF14]'
                       : 'text-white hover:text-[#1E90FF]'
-                    }
-                  `}
+                  }`}
                 >
                   {label}
                   {isActive && (

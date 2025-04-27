@@ -36,7 +36,7 @@ export default function Home() {
         <Navbar />
 
         {/* Scroll container: full‐screen, smooth scrolling, vertical snap */}
-        <div className="h-screen overflow-y-auto scroll-smooth snap-y snap-mandatory">
+        <div id="scroll-container" className="h-screen overflow-y-auto scroll-smooth snap-y snap-mandatory">
           {loading ? (
             // loader also participates in snap
             <div className="relative min-h-screen overflow-hidden snap-start">
