@@ -4,6 +4,17 @@ import { motion } from 'framer-motion'
 
 const experiences = [
   {
+    company: 'Wesco',
+    title: 'SOC Analyst Intern',
+    date: 'Jun 2024 – Dec 2024',
+    bullets: [
+      'Triaged 50+ daily alerts in Splunk & ELK, reducing false positives by 20%.',
+      'Resolved 15+ phishing/malware incidents—documented IOCs and escalated high-severity threats.',
+      'Mapped attacker infra via OSINT (VirusTotal, Shodan), cutting phishing risk 35%.',
+      'Scanned networks with Nessus, identified 50+ CVEs, and collaborated with DevOps on AWS remediation.',
+    ],
+  },
+  {
     company: 'Cigniti Technologies',
     title: 'Security Analyst',
     date: 'May 2022 – Apr 2023',
@@ -16,17 +27,7 @@ const experiences = [
       'Refined incident response playbooks and ran simulated attack drills to reduce MTTR.',
     ],
   },
-  {
-    company: 'Wesco',
-    title: 'SOC Analyst Intern',
-    date: 'Jun 2024 – Dec 2024',
-    bullets: [
-      'Triaged 50+ daily alerts in Splunk & ELK, reducing false positives by 20%.',
-      'Resolved 15+ phishing/malware incidents—documented IOCs and escalated high-severity threats.',
-      'Mapped attacker infra via OSINT (VirusTotal, Shodan), cutting phishing risk 35%.',
-      'Scanned networks with Nessus, identified 50+ CVEs, and collaborated with DevOps on AWS remediation.',
-    ],
-  },
+  
   {
     company: 'Virtusa Consulting',
     title: 'Security Quality Analyst Intern',
@@ -64,8 +65,8 @@ export default function Experience() {
   // snap-scroll spy
   useEffect(() => {
     const obs = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
+      entries => {
+        entries.forEach(e => {
           if (e.isIntersecting) {
             setSelected(+e.target.dataset.index)
           }
@@ -75,11 +76,11 @@ export default function Experience() {
     )
     containerRef.current
       .querySelectorAll('.exp-slide')
-      .forEach((el) => obs.observe(el))
+      .forEach(el => obs.observe(el))
     return () => obs.disconnect()
   }, [])
 
-  const scrollTo = (i) => {
+  const scrollTo = i => {
     const el = document.querySelector(`[data-index="${i}"]`)
     el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
@@ -102,7 +103,11 @@ export default function Experience() {
   return (
     <section id="experience" className="py-20 bg-gray-900 text-white">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center">Experience</h2>
+        {/* New heading & tagline */}
+        <h2 className="text-3xl font-bold text-center">My Professional Journey.</h2>
+        <p className="mt-2 text-center text-green-400 italic">
+          Steps taken. Skills earned. Impact made.
+        </p>
 
         <div className="mt-12 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12">
           {/* ─── Left: Donut + Dots ─── */}
@@ -131,8 +136,7 @@ export default function Experience() {
 
               {/* static slices */}
               {[...Array(totalSlices)].map((_, idx) => {
-                // skip drawing the spinner slice for idx===0
-                if (idx === 0) return null
+                if (idx === 0) return null // skip spinner slice
                 const start = sliceAngle * idx
                 const end = sliceAngle * (idx + 1)
                 return (

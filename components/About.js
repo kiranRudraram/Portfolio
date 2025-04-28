@@ -37,10 +37,15 @@ export default function About() {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <h2 className="mb-8 text-2xl font-mono font-semibold text-green-400 text-center">
-          <span className="text-gray-300">$</span> about-me
+        {/* New Heading & Tagline */}
+        <h2 className="mb-2 text-3xl font-bold text-center text-white">
+          The Mind Behind the Mission.
         </h2>
+        <p className="mb-8 text-center text-green-400 italic">
+          Building secure systems. Protecting what matters.
+        </p>
 
+        {/* Typing-terminal card */}
         <div
           className="relative w-full max-w-4xl mx-auto overflow-hidden rounded-lg shadow-lg"
           style={{ aspectRatio: '1131 / 521' }}

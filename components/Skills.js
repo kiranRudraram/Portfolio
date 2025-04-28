@@ -40,7 +40,11 @@ export default function Skills() {
 
       <section id="skills" className="relative z-10 bg-gray-800 text-white py-20">
         <div className="max-w-6xl mx-auto px-4">
-          <h2 className="mb-16 text-3xl font-bold text-center">My Skills</h2>
+          {/* New heading & tagline */}
+          <h2 className="mb-2 text-3xl font-bold text-center">My Arsenal of Skills.</h2>
+          <p className="mb-12 text-center text-green-400 italic">
+            Technical precision. Real-world readiness.
+          </p>
 
           {categories.map(({ id, title, logos }, idx) => {
             const items = [...logos, ...logos]

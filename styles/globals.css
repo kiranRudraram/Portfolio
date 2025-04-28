@@ -4,6 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* hide native scrollbar in the form */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+@keyframes neon {
+  0%, 100% { box-shadow: 0 0 8px #39FF14; }
+  50%      { box-shadow: 0 0 20px #39FF14; }
+}
+.neon-btn {
+  animation: neon 1.5s ease-in-out infinite;
+}
+
+
 /* in globals.css (already present) */
 .snap-y { scroll-snap-type: y mandatory; }
 .snap-start { scroll-snap-align: start; }
