@@ -1,8 +1,13 @@
 // components/Contact.js
-import { useState, useEffect, useRef }  from 'react'
+import { useState, useEffect, useRef }   from 'react'
 import { motion, AnimatePresence, useInView } from 'framer-motion'
-import Confetti                       from 'react-confetti'
-import { FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa'
+import Confetti                          from 'react-confetti'
+import {
+  FaLinkedin,
+  FaGithub,
+  FaInstagram,
+  FaEnvelope
+} from 'react-icons/fa'
 
 export default function Contact() {
   const [form, setForm]           = useState({ name:'', email:'', message:'' })
@@ -10,7 +15,7 @@ export default function Contact() {
   const [submitted, setSubmitted] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
 
-  // in-view detection for slide-in
+  // in-view for slide-in
   const sectionRef = useRef(null)
   const inView     = useInView(sectionRef, { once: true, margin: '-100px' })
 
@@ -26,10 +31,11 @@ export default function Contact() {
 
   const validate = () => {
     const errs = {}
-    if (!form.name.trim())     errs.name    = 'Name is required'
-    if (!form.email.trim())    errs.email   = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(form.email)) errs.email = 'Invalid email'
-    if (!form.message.trim())  errs.message = 'Message is required'
+    if (!form.name.trim())    errs.name    = 'Name is required'
+    if (!form.email.trim())   errs.email   = 'Email is required'
+    else if (!/\S+@\S+\.\S+/.test(form.email))
+                              errs.email   = 'Invalid email'
+    if (!form.message.trim()) errs.message = 'Message is required'
     return errs
   }
 
@@ -40,6 +46,7 @@ export default function Contact() {
       setErrors(errs)
       return
     }
+    // TODO: hook up backend
     setErrors({})
     setSubmitted(true)
     setShowConfetti(true)
@@ -47,7 +54,6 @@ export default function Contact() {
     setTimeout(() => setShowConfetti(false), 3000)
   }
 
-  // gentle spring
   const spring = { type: 'spring', stiffness: 60, damping: 20 }
 
   return (
@@ -56,7 +62,7 @@ export default function Contact() {
       ref={sectionRef}
       className="py-20 bg-gray-900 text-white relative overflow-hidden"
     >
-      {/* ── Left illustration ── */}
+      {/* Left illustration */}
       <motion.img
         src="/images/contact-left.png"
         alt="Monitoring Station"
@@ -67,12 +73,11 @@ export default function Contact() {
           hidden md:block
           absolute left-1/4 top-1/2
           transform -translate-x-1/2 -translate-y-1/2
-          w-80 lg:w-96
-          pointer-events-none
+          w-80 lg:w-96 pointer-events-none
         "
       />
 
-      {/* ── Right illustration ── */}
+      {/* Right illustration */}
       <motion.img
         src="/images/contact-right.png"
         alt="Security Word Cloud"
@@ -83,12 +88,11 @@ export default function Contact() {
           hidden md:block
           absolute right-1/4 top-1/2
           transform translate-x-1/2 -translate-y-1/2
-          w-80 lg:w-96
-          pointer-events-none
+          w-80 lg:w-96 pointer-events-none
         "
       />
 
-      {/* ── Center form ── */}
+      {/* Center form */}
       <div className="max-w-lg mx-auto px-4 relative z-10">
         <h2 className="text-3xl font-bold text-center mb-2">
           Establish a Secure Connection
@@ -98,7 +102,6 @@ export default function Contact() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Name */}
           <div>
             <input
               name="name"
@@ -110,7 +113,6 @@ export default function Contact() {
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
           </div>
 
-          {/* Email */}
           <div>
             <input
               name="email"
@@ -123,7 +125,6 @@ export default function Contact() {
             {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
-          {/* Message */}
           <div>
             <textarea
               name="message"
@@ -136,7 +137,6 @@ export default function Contact() {
             {errors.message && <p className="text-red-500 text-sm mt-1">{errors.message}</p>}
           </div>
 
-          {/* Submit */}
           <div className="text-center">
             <motion.button
               type="submit"
@@ -165,19 +165,34 @@ export default function Contact() {
           </AnimatePresence>
         </div>
 
-        {/* Social */}
-        <div className="mt-12 flex justify-center space-x-8 text-2xl">
+        {/* Social + Email Icon */}
+        <div className="mt-12 flex justify-center space-x-6 text-2xl">
           {[
-            { icon: FaLinkedin, href:'https://www.linkedin.com/in/kiran-rudraram/' },
-            { icon: FaGithub,   href:'https://github.com/kiranRudraram'   },
-            { icon: FaInstagram,href:'https://www.instagram.com/kiran_rudraram/' }
+            {
+              icon: FaLinkedin,
+              href: 'https://www.linkedin.com/in/kiran-rudraram/',
+            },
+            {
+              icon: FaGithub,
+              href: 'https://github.com/kiranRudraram',
+            },
+            {
+              icon: FaInstagram,
+              href: 'https://www.instagram.com/kiran_rudraram/',
+            },
+            // Gmail web compose
+            {
+              icon: FaEnvelope,
+              href:
+                'https://mail.google.com/mail/?view=cm&fs=1&to=kiranrudraram@gmail.com',
+            },
           ].map(({ icon: Icon, href }, i) => (
             <motion.a
               key={i}
               href={href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-400"
+              className="text-gray-400 hover:text-green-400"
               whileHover={{ scale: 1.2, color: '#39FF14' }}
               transition={{ type: 'spring', stiffness: 300, damping: 20 }}
             >
@@ -187,7 +202,7 @@ export default function Contact() {
         </div>
       </div>
 
-      {/* Confetti on success */}
+      {/* Confetti */}
       <AnimatePresence>
         {showConfetti && (
           <Confetti
@@ -195,7 +210,7 @@ export default function Contact() {
             numberOfPieces={200}
             gravity={0.3}
             tweenDuration={3000}
-            style={{ position: 'fixed', top:0, left:0, width:'100%', height:'100%' }}
+            style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%' }}
           />
         )}
       </AnimatePresence>

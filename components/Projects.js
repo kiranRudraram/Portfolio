@@ -24,10 +24,24 @@ const projects = [
     id: 'smart-contracts',
     title: 'Blockchain Smart Contracts',
     description:
-      'Developed and tested Solidity smart contracts locally with Foundry and Ganache, ensuring 100% reliability.',
+      'Developed and tested Solidity smart contracts locally, ensuring 100% reliability with automated Foundry tests.',
     technologies: ['Solidity', 'Foundry', 'TypeScript'],
     skills: ['Smart Contract Dev', 'Testing', 'Blockchain Security'],
     icons: ['/icons/solidity.png', '/icons/foundry.png', '/icons/typescript.png'],
+  },
+  {
+    id: 'gesture-mouse',
+    title: 'Gesture Controlled Virtual Mouse',
+    description:
+      'Implemented a contactless mouse driven by hand gestures and voice commands on Windows using MediaPipe CNN models via pybind11.',
+    technologies: ['Machine Learning', 'Computer Vision', 'MediaPipe', 'pybind11'],
+    skills: ['Gesture Recognition', 'Voice Integration', 'Python', 'CV Pipelines'],
+    icons: [
+      '/icons/python.png',
+      '/icons/mediapipe.png',
+      '/icons/pybind11.png',
+      '/icons/computer-vision.png'
+    ],
   },
 ]
 
@@ -47,7 +61,7 @@ export default function Projects() {
           Projects That Shaped My Journey.
         </h2>
         <p className="text-center text-blue-400 mb-12 italic">
-          Showcasing real-world impacts, technical depth, and a security-first mindset.
+          Showcasing real-world impact, technical depth, and a security-first mindset.
         </p>
 
         {/* Projects Grid */}
