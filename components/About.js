@@ -4,7 +4,13 @@ import { motion, useInView } from 'framer-motion'
 import { useState, useEffect, useRef } from 'react'
 import DiagonalDivider from './DiagonalDivider'
 
-const aboutText = `Cybersecurity professional with hands-on experience in Application Security, threat modeling, and vulnerability management. A detail-oriented and action-oriented individual specializing in secure coding practices, cloud security, and automation scripting. Master of Science in Cybersecurity (University of North Texas ’25).`
+const aboutText = `
+Cybersecurity Analyst with a strong foundation in securing systems, detecting threats, and reducing risk across complex environments. I specialize in application security, cloud hardening, vulnerability management, and scripting-based automation – bringing both technical depth and proactive problem-solving to every engagement.
+
+Graduating with a Master of Science in Cybersecurity from the University of North Texas on May 9, 2025, I’ve already applied my skills in real-world scenarios: remediating high-impact CVEs, simulating phishing attacks, integrating security into CI/CD pipelines, and refining incident response playbooks.
+
+🔐 I don't just find security gaps—I build solutions to close them.
+`
 
 export default function About() {
   const ref    = useRef(null)
@@ -12,7 +18,8 @@ export default function About() {
 
   const [displayText, setDisplayText] = useState('')
   const [isComplete, setIsComplete]   = useState(false)
-  const typingSpeed = 50
+  // speed up typing
+  const typingSpeed = 30
 
   useEffect(() => {
     if (!inView) return
@@ -31,17 +38,17 @@ export default function About() {
       <motion.section
         id="about"
         ref={ref}
-        className="relative py-16 px-4 bg-gray-900"
+        className="relative py-20 px-4 bg-gray-900"
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        {/* New Heading & Tagline */}
-        <h2 className="mb-2 text-3xl font-bold text-center text-white">
+        {/* Heading & Tagline */}
+        <h2 className="mb-2 text-4xl font-bold text-center text-white">
           The Mind Behind the Mission.
         </h2>
-        <p className="mb-8 text-center text-green-400 italic">
+        <p className="mb-8 text-center text-green-400 italic text-lg">
           Building secure systems. Protecting what matters.
         </p>
 
@@ -58,7 +65,9 @@ export default function About() {
             priority
           />
           <div className="absolute inset-0 bg-black/20 pointer-events-none" />
-          <pre className="absolute inset-0 z-10 pt-16 px-6 pb-6 font-mono text-green-400 text-sm sm:text-base whitespace-pre-wrap leading-relaxed">
+          <pre
+            className="absolute inset-0 z-10 pt-16 px-8 pb-6 font-mono text-green-400 text-base sm:text-lg whitespace-pre-wrap leading-relaxed"
+          >
             {displayText}
             {!isComplete && <span className="inline-block animate-blink">|</span>}
           </pre>

@@ -1,6 +1,7 @@
 // components/Navbar.js
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { FaDownload } from 'react-icons/fa'
 
 const sections = [
   { id: 'hero',           label: 'Home' },
@@ -24,16 +25,14 @@ export default function Navbar() {
       // fade‐in navbar background once we leave hero
       setScrolled(container.scrollTop > window.innerHeight - 100)
 
-      // scroll-spy: pick the section whose midpoint is in view
+      // scroll‐spy 
       const mid = container.clientHeight / 2
       for (let { id } of sections) {
         const el = document.getElementById(id)
         if (!el) continue
-        const rect = el.getBoundingClientRect()
+        const rect  = el.getBoundingClientRect()
         const cRect = container.getBoundingClientRect()
-
-        // top relative to container
-        const top = rect.top - cRect.top
+        const top    = rect.top - cRect.top
         const bottom = top + rect.height
 
         if (top <= mid && bottom > mid) {
@@ -44,7 +43,7 @@ export default function Navbar() {
     }
 
     container.addEventListener('scroll', onScroll, { passive: true })
-    onScroll() // initial highlight
+    onScroll()
     return () => container.removeEventListener('scroll', onScroll)
   }, [])
 
@@ -61,8 +60,8 @@ export default function Navbar() {
           {/* logo */}
           <div className="text-white font-bold text-xl">SKR</div>
 
-          {/* links */}
-          <div className="hidden md:flex space-x-6">
+          {/* nav links + resume */}
+          <div className="hidden md:flex items-center space-x-6">
             {sections.map(({ id, label }) => {
               const isActive = activeSection === id
               return (
@@ -83,6 +82,16 @@ export default function Navbar() {
                 </Link>
               )
             })}
+
+            {/* resume download button */}
+            <a
+              href="/resume.pdf"
+              download="Sai_Kiran_Rudraram_Resume.pdf"
+              className="flex items-center px-3 py-1 text-white hover:text-[#1E90FF] transition-colors duration-300"
+            >
+              <FaDownload className="mr-1" />
+              Resume
+            </a>
           </div>
         </div>
       </div>

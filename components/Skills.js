@@ -1,5 +1,5 @@
 // components/Skills.js
-import { motion } from 'framer-motion'
+import { useState } from 'react'
 import DiagonalDivider from './DiagonalDivider'
 
 const categories = [
@@ -30,58 +30,81 @@ const categories = [
   },
 ]
 
+// prettify keys into names
+const prettyName = str =>
+  str
+    .split('-')
+    .map(w => w[0].toUpperCase() + w.slice(1))
+    .join(' ')
+
 export default function Skills() {
+  const [hoverLabel, setHoverLabel] = useState(null)
+  const [coords, setCoords] = useState({ x: 0, y: 0 })
+
+  const onMouseMove = (e, logo) => {
+    setCoords({ x: e.clientX, y: e.clientY })
+    setHoverLabel(prettyName(logo))
+  }
+  const onMouseLeave = () => setHoverLabel(null)
+
   return (
     <>
-      {/* diagonal from previous section */}
       <div className="overflow-hidden leading-[0]">
         <DiagonalDivider reverse />
       </div>
 
-      <section id="skills" className="relative z-10 bg-gray-800 text-white py-20">
+      <section
+        id="skills"
+        className="relative bg-gray-800 text-white py-12"
+        style={{ /* ensure it never forces scroll */ minHeight: 'auto' }}
+      >
         <div className="max-w-6xl mx-auto px-4">
-          {/* New heading & tagline */}
-          <h2 className="mb-2 text-3xl font-bold text-center">My Arsenal of Skills.</h2>
-          <p className="mb-12 text-center text-green-400 italic">
+          <h2 className="text-center text-3xl font-bold mb-1">My Arsenal of Skills.</h2>
+          <p className="text-center text-green-400 italic mb-8">
             Technical precision. Real-world readiness.
           </p>
 
-          {categories.map(({ id, title, logos }, idx) => {
-            const items = [...logos, ...logos]
-            const even = idx % 2 === 0
-            const fromX = even ? '0%' : '-50%'
-            const toX   = even ? '-50%' : '0%'
+          {categories.map(({ id, title, logos }) => (
+            <div key={id} className="mb-10">
+              <h3 className="text-center text-2xl font-semibold mb-4">{title}</h3>
 
-            return (
-              <div key={id} className="mb-16">
-                <h3 className="mb-6 text-2xl font-semibold text-center">
-                  {title}
-                </h3>
-                {/* pad both sides so logos never hit the edges */}
-                <div className="overflow-hidden px-4">
-                  <motion.div
-                    className="flex items-center justify-between gap-8"
-                    animate={{ x: [fromX, toX] }}
-                    transition={{ repeat: Infinity, ease: 'linear', duration: 20 }}
+              <div className="flex flex-wrap justify-center gap-4 px-2">
+                {logos.map(logo => (
+                  <div
+                    key={logo}
+                    className="p-2 bg-gray-700 rounded-md cursor-pointer"
+                    onMouseMove={e => onMouseMove(e, logo)}
+                    onMouseLeave={onMouseLeave}
                   >
-                    {items.map((logo, i) => (
-                      <img
-                        key={`${logo}-${i}`}
-                        src={`/icons/${logo}.png`}
-                        alt={logo}
-                        className="h-16 w-auto object-contain drop-shadow-lg"
-                        loading="lazy"
-                      />
-                    ))}
-                  </motion.div>
-                </div>
+                    <img
+                      src={`/icons/${logo}.png`}
+                      alt={logo}
+                      className="h-12 w-auto object-contain drop-shadow-lg"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
               </div>
-            )
-          })}
+            </div>
+          ))}
         </div>
+
+        {hoverLabel && (
+          <div
+            style={{
+              position: 'fixed',
+              top: coords.y + 12,
+              left: coords.x + 12,
+              pointerEvents: 'none',
+              zIndex: 50,
+            }}
+            className="bg-black/80 text-white text-xs py-1 px-2 rounded-md select-none"
+          >
+            {hoverLabel}
+          </div>
+        )}
       </section>
 
-      {/* diagonal into next section */}
       <div className="overflow-hidden leading-[0]">
         <DiagonalDivider />
       </div>
