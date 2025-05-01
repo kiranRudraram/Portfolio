@@ -1,44 +1,19 @@
 // components/Hero.js
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import Particles from '@tsparticles/react'
-import { loadFull } from '@tsparticles/engine'
 import NetworkGlobe from './NetworkGlobe'
-import DecryptText from './DecryptText'
+import DecryptText  from './DecryptText'
 import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline'
-
-// initialize tsParticles engine
-const particlesInit = async (engine) => {
-  await loadFull(engine)
-}
-
-const particlesOptions = {
-  fullScreen: { enable: false },
-  particles: {
-    number: { value: 60, density: { enable: true, area: 800 } },
-    color: { value: '#39FF14' },
-    shape: { type: 'circle' },
-    opacity: { value: 0.2 },
-    size: { value: 1.5 },
-    move: {
-      enable: true,
-      speed: 0.5,
-      direction: 'none',
-      outModes: 'out',
-    },
-  },
-  interactivity: { events: { onHover: { enable: false } } },
-  detectRetina: true,
-}
 
 export default function Hero() {
   const [taglineUnlocked, setTaglineUnlocked] = useState(false)
   const [showStatus, setShowStatus]           = useState(false)
+
   const tagline =
-    'Cybersecurity | AppSec | Cloud Security | Vulnerability & Risk Mgmt'
+    'Cybersecurity Analyst | AppSec | Cloud Security | Vulnerability & Risk Mgmt'
   const revealDelay = Math.floor(2000 / tagline.length)
 
-  // 5s timer for status text
+  // after unlock, wait 5s then show status
   useEffect(() => {
     let timer
     if (taglineUnlocked) {
@@ -58,51 +33,45 @@ export default function Hero() {
     setMousePos({ x, y })
   }
 
-  const BG_FACTOR = 5
-  const FG_FACTOR = 20
+  const BG_FACTOR = 10
+  const FG_FACTOR = 30
 
   return (
     <section
       id="hero"
-      className="relative h-screen w-full overflow-hidden bg-black"
+      className="relative h-screen w-full overflow-hidden"
       onMouseMove={handleMouseMove}
       style={{ perspective: 800 }}
     >
-      {/* Particles Background */}
-      <Particles
-        init={particlesInit}
-        options={particlesOptions}
-        className="absolute inset-0 z-0"
-      />
-
-      {/* Parallax Globe */}
+      {/* 1) Parallax background layer */}
       <motion.div
         style={{
           x: mousePos.x * BG_FACTOR,
           y: mousePos.y * BG_FACTOR,
         }}
-        className="absolute inset-0 z-5"
+        className="absolute inset-0"
       >
         <NetworkGlobe />
       </motion.div>
 
-      {/* Dark Overlay */}
+      {/* 2) Overlay */}
       <motion.div
         style={{
-          x: mousePos.x * BG_FACTOR * 0.3,
-          y: mousePos.y * BG_FACTOR * 0.3,
+          x: mousePos.x * BG_FACTOR * 0.5,
+          y: mousePos.y * BG_FACTOR * 0.5,
         }}
-        className="absolute inset-0 bg-black/60 z-10"
+        className="absolute inset-0 bg-black/60"
       />
 
-      {/* Foreground Content */}
+      {/* 3) Foreground content */}
       <motion.div
         style={{
-          x: -mousePos.x * FG_FACTOR * 0.5,
-          y: -mousePos.y * FG_FACTOR * 0.5,
+          x: -mousePos.x * FG_FACTOR,
+          y: -mousePos.y * FG_FACTOR,
         }}
-        className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center space-y-6 z-20"
+        className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center space-y-6"
       >
+        {/* Name Reveal */}
         <DecryptText
           text="Sai Kiran Rudraram"
           scrambleSpeed={50}
@@ -110,28 +79,19 @@ export default function Hero() {
           className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white"
         />
 
+        {/* Lock + Tagline */}
         <div className="flex items-center space-x-4">
-          {/* Lock icon + tooltip */}
-          <div className="relative inline-block group">
-            {!taglineUnlocked ? (
-              <LockClosedIcon
-                onClick={() => setTaglineUnlocked(true)}
-                className="w-8 h-8 text-[#1E90FF] cursor-pointer animate-pulse hover:animate-bounce transition"
-              />
-            ) : (
-              <LockOpenIcon
-                onClick={() => setTaglineUnlocked(false)}
-                className="w-8 h-8 text-[#39FF14] cursor-pointer hover:scale-110 transition"
-              />
-            )}
-            <span className="
-              absolute -top-6 left-1/2 transform -translate-x-1/2
-              bg-black text-white text-xs rounded px-2 py-1
-              opacity-0 group-hover:opacity-100 transition-opacity
-            ">
-              Secured by SKR
-            </span>
-          </div>
+          {!taglineUnlocked ? (
+            <LockClosedIcon
+              onClick={() => setTaglineUnlocked(true)}
+              className="w-8 h-8 text-[#1E90FF] cursor-pointer animate-pulse hover:animate-bounce transition"
+            />
+          ) : (
+            <LockOpenIcon
+              onClick={() => setTaglineUnlocked(false)}
+              className="w-8 h-8 text-[#39FF14] cursor-pointer hover:scale-110 transition"
+            />
+          )}
 
           {!taglineUnlocked ? (
             <motion.span
@@ -152,7 +112,7 @@ export default function Hero() {
           )}
         </div>
 
-        {/* Status after countdown */}
+        {/* 🚀 Status after 5s */}
         {showStatus && (
           <motion.p
             initial={{ opacity: 0, y: 10 }}
