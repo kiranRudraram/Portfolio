@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import HexGridBackground from './HexGridBackground'
+import DataMeshBackground from './DataMeshBackground'
 
 const experiences = [
   {
@@ -87,15 +87,19 @@ export default function Experience() {
   const pitch = `I'm a Master's graduate in Cybersecurity with hands-on AppSec, cloud-security, and SOC experience. I drive down risk through automation, close CVEs before they become headlines, and build resilient detection pipelines. Let's turn threats into insights and secure your organization end-to-end.`
 
   return (
-    <section
+    <motion.section
       id="experience"
-      className="relative h-screen w-full overflow-hidden bg-gray-900 text-white"
+      className="relative w-full h-screen snap-start overflow-hidden text-white"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-      <HexGridBackground />
+      <DataMeshBackground />
 
-      <div className="absolute inset-0 bg-gray-900/60 z-10 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/60 z-10 pointer-events-none" />
 
-      <div className="absolute inset-0 z-20 flex flex-col justify-center">
+      <div className="absolute inset-0 z-20 flex flex-col justify-center items-center">
         <div className="max-w-6xl mx-auto px-4">
           <h2 className="text-3xl font-bold text-center text-white">
             My Professional Journey.
@@ -105,6 +109,7 @@ export default function Experience() {
           </p>
 
           <div className="mt-12 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12">
+            {/* Spinner + Timeline */}
             <div className="relative">
               <svg width={size} height={size} className="block mx-auto">
                 {selected === 0 && (
@@ -154,6 +159,7 @@ export default function Experience() {
               </div>
             </div>
 
+            {/* Experience Items */}
             <div
               ref={containerRef}
               className="flex-1 h-[400px] overflow-y-auto snap-y snap-mandatory scrollbar-hide"
@@ -188,6 +194,6 @@ export default function Experience() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   )
 }
