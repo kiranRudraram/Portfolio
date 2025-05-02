@@ -4,6 +4,24 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes hexBG {
+  from { background-position: 0 0, 0 0, 20px 34.64px, 20px 34.64px; }
+  to   { background-position: 40px 0, 40px 0, 60px 34.64px, 60px 34.64px; }
+}
+
+.bg-hex-grid {
+  background-color: #0f172a;
+  background-image:
+    linear-gradient(30deg, rgba(57,255,20,0.15) 12%, transparent 12%),
+    linear-gradient(150deg, rgba(57,255,20,0.15) 12%, transparent 12%),
+    linear-gradient(30deg, transparent 88%, rgba(57,255,20,0.15) 88%),
+    linear-gradient(150deg, transparent 88%, rgba(57,255,20,0.15) 88%);
+  background-size: 40px 69.28px;
+  background-position: 0 0, 0 0, 20px 34.64px, 20px 34.64px;
+  animation: hexBG 12s linear infinite;
+}
+
+
 /* hide native scrollbar in the form */
 ::-webkit-scrollbar {
   width: 0;
