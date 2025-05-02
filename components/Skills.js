@@ -55,19 +55,27 @@ export default function Skills() {
 
       <section
         id="skills"
-        className="relative bg-gray-800 text-white py-12"
-        style={{ /* ensure it never forces scroll */ minHeight: 'auto' }}
+        className="relative text-white py-12 overflow-hidden"
       >
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-center text-3xl font-bold mb-1">My Arsenal of Skills.</h2>
+        {/* animated gradient background */}
+        <div className="absolute inset-0 z-0 bg-skill-gradient" />
+        {/* subtle noise overlay */}
+        <div className="absolute inset-0 z-10 bg-skill-noise" />
+
+        {/* actual content on top */}
+        <div className="relative z-20 max-w-6xl mx-auto px-4">
+          <h2 className="text-center text-3xl font-bold mb-1">
+            My Arsenal of Skills.
+          </h2>
           <p className="text-center text-green-400 italic mb-8">
             Technical precision. Real-world readiness.
           </p>
 
           {categories.map(({ id, title, logos }) => (
             <div key={id} className="mb-10">
-              <h3 className="text-center text-2xl font-semibold mb-4">{title}</h3>
-
+              <h3 className="text-center text-2xl font-semibold mb-4">
+                {title}
+              </h3>
               <div className="flex flex-wrap justify-center gap-4 px-2">
                 {logos.map(logo => (
                   <div
@@ -87,22 +95,21 @@ export default function Skills() {
               </div>
             </div>
           ))}
-        </div>
 
-        {hoverLabel && (
-          <div
-            style={{
-              position: 'fixed',
-              top: coords.y + 12,
-              left: coords.x + 12,
-              pointerEvents: 'none',
-              zIndex: 50,
-            }}
-            className="bg-black/80 text-white text-xs py-1 px-2 rounded-md select-none"
-          >
-            {hoverLabel}
-          </div>
-        )}
+          {hoverLabel && (
+            <div
+              style={{
+                position: 'fixed',
+                top: coords.y + 12,
+                left: coords.x + 12,
+                pointerEvents: 'none',
+              }}
+              className="bg-black/80 text-white text-xs py-1 px-2 rounded-md select-none z-20"
+            >
+              {hoverLabel}
+            </div>
+          )}
+        </div>
       </section>
 
       <div className="overflow-hidden leading-[0]">

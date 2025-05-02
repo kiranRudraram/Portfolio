@@ -14,6 +14,34 @@
   font-family: 'Fira Code', monospace !important;
 }
 
+@keyframes gradient-Perlin {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ——— neon Perlin gradient ——— */
+.bg-skill-gradient {
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 1)    0%,   /* darkest base */
+    rgba(19, 79, 8, 0.4) 25%,  /* neon green */
+    rgba(15, 23, 42, 1)    50%,  /* back to base */
+    rgba(0, 255, 255, 0.33) 75%,  /* neon cyan */
+    rgba(15, 23, 42, 1)    100%  /* base */
+  );
+  background-size: 300% 300%;
+  animation: gradient-Perlin 25s ease infinite;
+}
+
+/* subtle noise overlay to break up the smooth color */
+/* pure-CSS tiny noise overlay using data-URI SVG */
+.bg-skill-noise {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+
 @keyframes neon {
   0%, 100% { box-shadow: 0 0 8px #39FF14; }
   50%      { box-shadow: 0 0 20px #39FF14; }
@@ -21,7 +49,6 @@
 .neon-btn {
   animation: neon 1.5s ease-in-out infinite;
 }
-
 
 /* in globals.css (already present) */
 .snap-y { scroll-snap-type: y mandatory; }
@@ -42,23 +69,12 @@
   display: none;             /* Chrome, Safari, Opera */
 }
 
-
 @keyframes expand {
   from { width: 0; }
   to   { width: 100%; }
 }
 .animate-expand {
   animation: expand 0.3s ease-out forwards;
-}
-
-
-.bg-skills {
-  background: linear-gradient(
-      135deg,
-      rgba(15, 23, 42, 0.9) 0%,
-      rgba(31, 41, 55, 0.9) 100%
-    )
-    fixed;
 }
 
 .animate-blink {
@@ -69,7 +85,6 @@
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-
 .animate-spin-slow {
   animation: spin-slow 8s linear infinite;
 }
@@ -78,7 +93,6 @@
 #scroll-container {
   scroll-behavior: smooth;
 }
-
 
 html {
   scroll-behavior: smooth;
