@@ -89,108 +89,110 @@ export default function Experience() {
   return (
     <motion.section
       id="experience"
-      className="relative w-full h-screen snap-start overflow-hidden text-white"
+      className="relative w-full min-h-screen overflow-hidden text-white"
       initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
       <DataMeshBackground />
-
       <div className="absolute inset-0 bg-black/60 z-10 pointer-events-none" />
 
-      <div className="absolute inset-0 z-20 flex flex-col justify-center items-center">
-        <div className="max-w-6xl mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center text-white">
-            My Professional Journey.
-          </h2>
-          <p className="mt-2 text-center text-green-400 italic">
-            Steps taken. Skills earned. Impact made.
-          </p>
+      <div className="relative z-20 flex flex-col items-center justify-center px-4 py-16">
+        <h2 className="text-3xl font-bold text-center text-white">
+          My Professional Journey.
+        </h2>
+        <p className="mt-2 text-center text-green-400 italic">
+          Steps taken. Skills earned. Impact made.
+        </p>
 
-          <div className="mt-12 flex flex-col lg:flex-row items-center lg:items-start justify-center gap-12">
-            {/* Spinner + Timeline */}
-            <div className="relative">
-              <svg width={size} height={size} className="block mx-auto">
-                {selected === 0 && (
-                  <motion.circle
-                    cx={cx}
-                    cy={cy}
-                    r={r}
-                    fill="none"
-                    stroke="rgba(57,255,20,0.8)"
-                    strokeWidth={8}
-                    strokeDasharray={`${dashLength} ${circumference}`}
-                    strokeLinecap="round"
-                    style={{ transformOrigin: '50% 50%' }}
-                    animate={{ rotate: [0, 360] }}
-                    transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+        <div className="mt-12 flex flex-col md:flex-col lg:flex-row items-center justify-center gap-10 lg:gap-16 w-full">
+          {/* Spinner + Timeline */}
+          <div className="relative w-full max-w-sm lg:w-auto mb-10 lg:mb-0">
+            <svg
+              width="100%"
+              height="100%"
+              viewBox={`0 0 ${size} ${size}`}
+              className="block mx-auto max-w-[280px] sm:max-w-[320px]"
+            >
+              {selected === 0 && (
+                <motion.circle
+                  cx={cx}
+                  cy={cy}
+                  r={r}
+                  fill="none"
+                  stroke="rgba(57,255,20,0.8)"
+                  strokeWidth={8}
+                  strokeDasharray={`${dashLength} ${circumference}`}
+                  strokeLinecap="round"
+                  style={{ transformOrigin: '50% 50%' }}
+                  animate={{ rotate: [0, 360] }}
+                  transition={{ repeat: Infinity, duration: 1.5, ease: 'linear' }}
+                />
+              )}
+              {Array.from({ length: totalSlices }).map((_, idx) => {
+                if (idx === 0) return null
+                const start = sliceAngle * idx
+                const end = sliceAngle * (idx + 1)
+                return (
+                  <motion.path
+                    key={idx}
+                    d={describeArc(cx, cy, r, start, end)}
+                    fill={selected === idx ? 'rgba(57,255,20,0.8)' : 'rgba(255,255,255,0.1)'}
+                    onClick={() => scrollTo(idx)}
                   />
-                )}
-                {Array.from({ length: totalSlices }).map((_, idx) => {
-                  if (idx === 0) return null
-                  const start = sliceAngle * idx
-                  const end = sliceAngle * (idx + 1)
-                  return (
-                    <motion.path
-                      key={idx}
-                      d={describeArc(cx, cy, r, start, end)}
-                      fill={selected === idx ? 'rgba(57,255,20,0.8)' : 'rgba(255,255,255,0.1)'}
-                      onClick={() => scrollTo(idx)}
-                    />
-                  )
-                })}
-              </svg>
+                )
+              })}
+            </svg>
 
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-60 h-60 rounded-full overflow-hidden border-4 border-green-400 shadow-xl">
-                  <img src="/images/exp.png" alt="Security" className="w-full h-full object-cover" />
-                </div>
-              </div>
-
-              <div className="absolute left-0 top-1/2 transform -translate-x-6 -translate-y-1/2 flex flex-col space-y-3">
-                {Array.from({ length: totalSlices }).map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => scrollTo(i)}
-                    className={`w-3 h-3 rounded-full transition ${selected === i ? 'bg-green-400' : 'bg-gray-600'}`}
-                  />
-                ))}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-48 h-48 sm:w-60 sm:h-60 rounded-full overflow-hidden border-4 border-green-400 shadow-xl">
+                <img src="/images/exp.png" alt="Security" className="w-full h-full object-cover" />
               </div>
             </div>
 
-            {/* Experience Items */}
-            <div
-              ref={containerRef}
-              className="flex-1 h-[400px] overflow-y-auto snap-y snap-mandatory scrollbar-hide"
-            >
-              <div className="exp-slide snap-start h-full flex flex-col justify-center px-6" data-index={0}>
-                <h3 className="text-2xl font-semibold">Why Hire Me?</h3>
-                <p className="mt-4 text-gray-300">{pitch}</p>
-              </div>
-              {experiences.map((exp, i) => (
-                <div
+            <div className="absolute left-0 top-1/2 transform -translate-x-6 -translate-y-1/2 hidden sm:flex flex-col space-y-3">
+              {Array.from({ length: totalSlices }).map((_, i) => (
+                <button
                   key={i}
-                  className="exp-slide snap-start h-full flex flex-col justify-center px-6"
-                  data-index={i + 1}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, x: 40 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="space-y-4 max-w-2xl"
-                  >
-                    <h3 className="text-2xl font-semibold">
-                      {exp.title} <span className="text-green-400">@ {exp.company}</span>
-                    </h3>
-                    <p className="text-sm text-gray-400">{exp.date}</p>
-                    <ul className="list-disc list-inside space-y-2">
-                      {exp.bullets.map((b, idx) => <li key={idx}>{b}</li>)}
-                    </ul>
-                  </motion.div>
-                </div>
+                  onClick={() => scrollTo(i)}
+                  className={`w-3 h-3 rounded-full transition ${selected === i ? 'bg-green-400' : 'bg-gray-600'}`}
+                />
               ))}
             </div>
+          </div>
+
+          {/* Timeline Details */}
+          <div
+            ref={containerRef}
+            className="w-full max-w-xl h-[420px] overflow-y-auto snap-y snap-mandatory scrollbar-hide"
+          >
+            <div className="exp-slide snap-start h-full flex flex-col justify-center px-6" data-index={0}>
+              <h3 className="text-2xl font-semibold">Why Hire Me?</h3>
+              <p className="mt-4 text-gray-300">{pitch}</p>
+            </div>
+            {experiences.map((exp, i) => (
+              <div
+                key={i}
+                className="exp-slide snap-start h-full flex flex-col justify-center px-6"
+                data-index={i + 1}
+              >
+                <motion.div
+                  initial={{ opacity: 0, x: 40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="space-y-4 max-w-2xl"
+                >
+                  <h3 className="text-2xl font-semibold">
+                    {exp.title} <span className="text-green-400">@ {exp.company}</span>
+                  </h3>
+                  <p className="text-sm text-gray-400">{exp.date}</p>
+                  <ul className="list-disc list-inside space-y-2">
+                    {exp.bullets.map((b, idx) => <li key={idx}>{b}</li>)}
+                  </ul>
+                </motion.div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
