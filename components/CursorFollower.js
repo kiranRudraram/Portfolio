@@ -2,29 +2,29 @@ import { useMotionValue, useSpring, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 export default function CursorFollower() {
-  // 1) Raw mouse coords
   const mouseX = useMotionValue(-100)
   const mouseY = useMotionValue(-100)
-  // 2) Springed for smooth lag
-  const spring = { damping: 20, stiffness: 300 }
+
+  const spring = { damping: 25, stiffness: 300 }
   const x = useSpring(mouseX, spring)
   const y = useSpring(mouseY, spring)
 
-  // 3) Keep a short history for the trail
-  const trailMax = 8
+  const trailMax = 12
   const [trail, setTrail] = useState([])
 
   useEffect(() => {
-    const unsub = x.onChange((latestX) => {
+    let animationFrame
+    const updateTrail = () => {
       setTrail((prev) => {
-        const next = [{ x: latestX, y: y.get() }, ...prev]
+        const next = [{ x: x.get(), y: y.get() }, ...prev]
         return next.slice(0, trailMax)
       })
-    })
-    return () => unsub()
+      animationFrame = requestAnimationFrame(updateTrail)
+    }
+    animationFrame = requestAnimationFrame(updateTrail)
+    return () => cancelAnimationFrame(animationFrame)
   }, [x, y])
 
-  // 4) Listen for pointer moves
   useEffect(() => {
     const handler = (e) => {
       mouseX.set(e.clientX)
@@ -36,65 +36,56 @@ export default function CursorFollower() {
 
   return (
     <>
-      {/* trailing dots */}
-      {trail.map((pos, i) => {
+      {/* Glowing Green Laser Trail */}
+      {trail.map((pos, i, arr) => {
+        if (i === arr.length - 1) return null
+        const next = arr[i + 1]
+        const dx = next.x - pos.x
+        const dy = next.y - pos.y
+        const angle = Math.atan2(dy, dx) * (180 / Math.PI)
+
+        const length = Math.sqrt(dx * dx + dy * dy) * 1.2
         const opacity = 1 - i / trailMax
-        const size = 16 * (1 - i / (trailMax * 1.2)) // shrink each dot
+        const thickness = 2 + (1 - i / trailMax) * 2
+
         return (
           <motion.div
             key={i}
-            className="fixed pointer-events-none rounded-full bg-[rgba(30,144,255,0.3)]"
+            className="fixed pointer-events-none"
             style={{
-              x: pos.x - size / 2,
-              y: pos.y - size / 2,
-              width: size,
-              height: size,
+              x: pos.x,
+              y: pos.y,
+              width: length,
+              height: thickness,
+              background: 'linear-gradient(90deg, rgba(0,255,0,0.9), rgba(0,255,0,0))',
               opacity,
+              borderRadius: '9999px',
+              rotate: `${angle}deg`,
+              translateX: '-50%',
+              translateY: '-50%',
               zIndex: 9998,
-              filter: 'blur(2px)'
+              boxShadow: '0 0 12px rgba(0,255,0,0.7)',
+              willChange: 'transform, opacity',
             }}
           />
         )
       })}
 
-      {/* main orb + ring */}
-      <motion.svg
-        width={28}
-        height={28}
-        viewBox="0 0 24 24"
-        className="fixed top-0 left-0 pointer-events-none"
+      {/* Main Green Arrowhead */}
+      <motion.div
+        className="fixed top-0 left-0 w-4 h-4 bg-green-500 pointer-events-none"
         style={{
           x,
           y,
           translateX: '-50%',
           translateY: '-50%',
+          rotate: '-45deg',
+          clipPath: 'polygon(0% 50%, 100% 0%, 100% 100%)',
           zIndex: 9999,
+          boxShadow: '0 0 10px rgba(0,255,0,0.8)',
+          willChange: 'transform',
         }}
-      >
-        {/* inner pulsing orb */}
-        <motion.circle
-          cx="12"
-          cy="12"
-          r="5"
-          fill="rgba(30,144,255,0.9)"
-          animate={{ r: [5, 8, 5] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
-        />
-
-        {/* outer rotating ring */}
-        <motion.circle
-          cx="12"
-          cy="12"
-          r="11"
-          fill="none"
-          stroke="rgba(30,144,255,0.5)"
-          strokeWidth="2"
-          strokeDasharray="69.12"      // 2π·11
-          strokeDashoffset={[0, 69.12]}
-          animate={{ strokeDashoffset: [0, -69.12] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-        />
-      </motion.svg>
+      />
     </>
   )
 }
