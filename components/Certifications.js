@@ -1,6 +1,7 @@
 // components/Certifications.js
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import DataMeshBackground from './DataMeshBackground'
 
 const badges = [
   { id: 'isc2',     img: '/certs/isc2.png' },
@@ -57,7 +58,11 @@ export default function Certifications() {
   const [open, setOpen] = useState(null)
 
   return (
-    <section id="certifications" className="py-20 bg-gray-900 text-white">
+    <section id="certifications" className="relative w-full h-screen snap-start overflow-hidden text-white">
+    <DataMeshBackground />
+    <div className="absolute inset-0 bg-black/70 z-10 pointer-events-none" />
+  
+    <div className="absolute inset-0 z-20 flex flex-col items-center justify-start pt-20">
       <div className="max-w-6xl mx-auto px-4 text-center">
         {/* Heading */}
         <h2 className="text-3xl font-bold">Verified Skills. Validated Trust.</h2>
@@ -70,7 +75,9 @@ export default function Certifications() {
           {badges.map(b => (
             <motion.div
               key={b.id}
-              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg p-6 shadow-lg w-32 h-32 flex items-center justify-center"
+              className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg
+    p-6 shadow-lg w-32 h-32 flex items-center justify-center
+    transition duration-300 hover:border-blue-400"
               whileHover={{ rotateY: 15, rotateX: 5, scale: 1.1 }}
               transition={{ type: 'spring', stiffness: 150, damping: 20 }}
             >
@@ -85,7 +92,9 @@ export default function Certifications() {
           {certifications.map(cert => (
             <div key={cert.id} className="flex flex-col items-center">
               <motion.div
-                className="w-full rounded-lg overflow-hidden cursor-pointer"
+                className="w-full rounded-lg overflow-hidden cursor-pointer
+    border border-transparent hover:border-blue-400
+    transition duration-300"
                 whileHover={{ scale: 1.05, opacity: 0.9 }}
                 transition={{ type: 'spring', stiffness: 180, damping: 12 }}
                 onClick={() => setOpen(cert)}
@@ -105,6 +114,7 @@ export default function Certifications() {
           ))}
         </div>
       </div>
+    </div>  
 
       {/* Lightbox Modal */}
       <AnimatePresence>

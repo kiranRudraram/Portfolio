@@ -2,36 +2,32 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { useRef, useMemo, useEffect, useState } from 'react'
 import * as THREE from 'three'
 
-function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
+function ConnectedMesh({ count = 300, maxDist = 2.4 }) {
   const pointRef = useRef()
   const lineRef = useRef()
-  const { viewport, size } = useThree()
+  const { viewport } = useThree()
 
-  const [mouse, setMouse] = useState([0, 0])
   const [scrollY, setScrollY] = useState(0)
+  const fadeRef = useRef(0)
 
   useEffect(() => {
-    const handleMove = e => setMouse([e.clientX / size.width - 0.5, e.clientY / size.height - 0.5])
     const handleScroll = () => setScrollY(window.scrollY)
-    window.addEventListener('mousemove', handleMove)
     window.addEventListener('scroll', handleScroll)
-    return () => {
-      window.removeEventListener('mousemove', handleMove)
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [size])
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const particles = useMemo(() => {
     const arr = []
     for (let i = 0; i < count; i++) {
       arr.push(new THREE.Vector3(
-        (Math.random() - 0.5) * viewport.width * 1.5,
-        (Math.random() - 0.5) * viewport.height * 1.5,
-        (Math.random() - 0.5) * 10
+        (Math.random() - 0.5) * viewport.width * 1.4, // wider X spread
+        (Math.random() - 0.5) * 20,                   // taller Y spread
+        (Math.random() - 0.5) * 20                    // deeper Z spread
+
       ))
     }
     return arr
-  }, [count, viewport.width, viewport.height])
+  }, [count, viewport.width])
 
   const posArray = new Float32Array(count * 3)
   particles.forEach((p, i) => {
@@ -45,12 +41,21 @@ function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime()
 
+    // Fade-in logic
+    if (fadeRef.current < 1) {
+      fadeRef.current = Math.min(1, fadeRef.current + 0.01)
+    }
+
+    const pulse = 0.3 + Math.sin(t * 1.2) * 0.15
+    const fade = fadeRef.current
+    const combinedOpacity = fade * pulse
+
     particles.forEach((p, i) => {
       p.z = Math.sin(t + i) * 0.5
       posArray[i * 3 + 2] = p.z
     })
 
-    if (pointRef.current) {
+    if (pointRef.current?.geometry?.attributes?.position) {
       pointRef.current.geometry.attributes.position.array = posArray
       pointRef.current.geometry.attributes.position.needsUpdate = true
     }
@@ -71,16 +76,19 @@ function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
       }
     }
 
-    if (lineRef.current) {
+    if (lineRef.current?.geometry?.attributes?.position) {
       lineRef.current.geometry.setDrawRange(0, idx / 3)
       lineRef.current.geometry.attributes.position.array = linePositions
       lineRef.current.geometry.attributes.position.needsUpdate = true
     }
 
     const rotX = scrollY * 0.0002
-    const rotY = mouse[0] * 0.5
-    if (pointRef.current) pointRef.current.rotation.set(rotX, rotY, 0)
-    if (lineRef.current) lineRef.current.rotation.set(rotX, rotY, 0)
+    if (pointRef.current) pointRef.current.rotation.set(rotX, 0, 0)
+    if (lineRef.current) lineRef.current.rotation.set(rotX, 0, 0)
+
+    // Final fade + pulse combo
+    if (pointRef.current?.material) pointRef.current.material.opacity = combinedOpacity + 0.4
+    if (lineRef.current?.material) lineRef.current.material.opacity = combinedOpacity + 0.2
   })
 
   return (
@@ -94,7 +102,12 @@ function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
             itemSize={3}
           />
         </bufferGeometry>
-        <pointsMaterial size={0.06} color="#00ffff" opacity={0.6} transparent />
+        <pointsMaterial
+          size={0.1}
+          color="#66ffff"
+          transparent
+          opacity={0}
+        />
       </points>
 
       <lineSegments ref={lineRef}>
@@ -106,7 +119,11 @@ function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
             itemSize={3}
           />
         </bufferGeometry>
-        <lineBasicMaterial color="#00ffff" opacity={0.15} transparent />
+        <lineBasicMaterial
+          color="#66ffff"
+          transparent
+          opacity={0}
+        />
       </lineSegments>
     </>
   )
@@ -115,7 +132,7 @@ function ConnectedMesh({ count = 300, maxDist = 4.0 }) {
 export default function DataMeshBackground() {
   return (
     <Canvas
-      className="absolute inset-0 z-0 pointer-events-none"
+      className="!absolute !inset-0 !z-0 !pointer-events-none"
       style={{
         position: 'absolute',
         top: 0,

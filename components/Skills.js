@@ -1,6 +1,5 @@
 // components/Skills.js
 import { useState } from 'react'
-import DiagonalDivider from './DiagonalDivider'
 
 const categories = [
   {
@@ -49,10 +48,6 @@ export default function Skills() {
 
   return (
     <>
-      <div className="overflow-hidden leading-[0]">
-        <DiagonalDivider reverse />
-      </div>
-
       <section
         id="skills"
         className="relative text-white py-12 overflow-hidden"
@@ -112,9 +107,6 @@ export default function Skills() {
         </div>
       </section>
 
-      <div className="overflow-hidden leading-[0]">
-        <DiagonalDivider />
-      </div>
     </>
   )
 }
