@@ -58,9 +58,9 @@ export default function Projects() {
       <ProjectsBackground />
       <div className="absolute inset-0 bg-black/20 z-10 pointer-events-none" />
 
-      <div className="absolute inset-0 z-20 flex flex-col justify-start">
+      <div className="absolute inset-0 z-20 flex flex-col justify-center md:justify-start">
         {/* Heading */}
-        <div className="max-w-6xl mx-auto px-4 pt-24 md:pt-0">
+        <div className="max-w-6xl mx-auto px-4 pt-24 md:pt-20">
           <h2 className="text-3xl font-bold text-center mb-2">
             Projects That Shaped My Journey.
           </h2>
@@ -70,37 +70,41 @@ export default function Projects() {
         </div>
 
         {/* Desktop View */}
-        <div className="hidden md:grid grid-cols-1 md:grid-cols-2 gap-6 px-4 max-w-6xl mx-auto">
-          {projects.map((proj) => (
-            <motion.div
-              key={proj.id}
-              whileHover={{ scale: 1.03 }}
-              className="bg-gray-800/75 p-5 rounded-lg border border-gray-700 hover:border-blue-400 shadow-lg transition-transform duration-300"
-            >
-              <h3 className="text-xl font-bold mb-2 text-white">{proj.title}</h3>
-              <p className="text-gray-300 mb-4">{proj.description}</p>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {proj.technologies.map((tech) => (
-                  <span key={tech} className="text-sm px-2 py-1 bg-gray-700 rounded-full text-blue-400">
-                    {tech}
-                  </span>
-                ))}
-              </div>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {proj.skills.map((skill) => (
-                  <span key={skill} className="text-xs px-2 py-1 bg-gray-700 rounded-full text-green-400">
-                    {skill}
-                  </span>
-                ))}
-              </div>
-              <div className="flex space-x-4 mt-2">
-                {proj.icons.map((src) => (
-                  <img key={src} src={src} alt="" className="h-6 w-6 object-contain hover:opacity-80 transition-opacity" loading="lazy" />
-                ))}
-              </div>
-            </motion.div>
+        {/* Desktop View */}
+<div className="hidden md:flex md:flex-col md:justify-center md:items-center md:flex-1">
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 px-4 max-w-6xl w-full">
+    {projects.map((proj) => (
+      <motion.div
+        key={proj.id}
+        whileHover={{ scale: 1.03 }}
+        className="bg-gray-800/75 p-5 rounded-lg border border-gray-700 hover:border-blue-400 shadow-lg transition-transform duration-300"
+      >
+        <h3 className="text-xl font-bold mb-2 text-white">{proj.title}</h3>
+        <p className="text-gray-300 mb-4">{proj.description}</p>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {proj.technologies.map((tech) => (
+            <span key={tech} className="text-sm px-2 py-1 bg-gray-700 rounded-full text-blue-400">
+              {tech}
+            </span>
           ))}
         </div>
+        <div className="flex flex-wrap gap-2 mb-4">
+          {proj.skills.map((skill) => (
+            <span key={skill} className="text-xs px-2 py-1 bg-gray-700 rounded-full text-green-400">
+              {skill}
+            </span>
+          ))}
+        </div>
+        <div className="flex space-x-4 mt-2">
+          {proj.icons.map((src) => (
+            <img key={src} src={src} alt="" className="h-6 w-6 object-contain hover:opacity-80 transition-opacity" loading="lazy" />
+          ))}
+        </div>
+      </motion.div>
+    ))}
+  </div>
+</div>
+
 
         {/* Mobile View: 2 Cards per Scroll Snap */}
         <div className="md:hidden flex-1 overflow-y-auto snap-y snap-mandatory px-4 pt-6 space-y-12 pb-10">
