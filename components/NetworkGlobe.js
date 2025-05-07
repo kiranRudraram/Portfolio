@@ -1,9 +1,9 @@
 // components/NetworkGlobe.js
 import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, useTexture } from '@react-three/drei'
+import { OrbitControls, useTexture, Stars } from '@react-three/drei'
 import { useRef, useMemo, useEffect } from 'react'
 import * as THREE from 'three'
-import { useState } from 'react'
+import { useMediaQuery } from 'react-responsive'
 
 function Globe({ radius = 2, initialRotationY = 0 }) {
   const mesh = useRef()
@@ -18,27 +18,27 @@ function Globe({ radius = 2, initialRotationY = 0 }) {
 
   const earthMap = useTexture('/textures/earth.jpg')
 
-
   return (
     <>
-      {/* Solid Earth */}
+      {/* 🌍 Earth */}
       <mesh ref={mesh}>
-        <sphereGeometry args={[radius, 32, 32]} />
+        <sphereGeometry args={[radius, 64, 64]} />
         <meshPhongMaterial
           map={earthMap}
-          shininess={10}
+          shininess={6}
           specular={new THREE.Color('gray')}
         />
       </mesh>
 
-      {/* Wireframe overlay */}
+      {/* 🟢 Soft Glow Halo */}
       <mesh>
-        <sphereGeometry args={[radius + 0.005, 32, 32]} />
+        <sphereGeometry args={[radius + 0.1, 64, 64]} />
         <meshBasicMaterial
-          color="#1e90ff"
-          wireframe
-          opacity={0.15}
+          color="#39FF14"
           transparent
+          opacity={0.04}
+          blending={THREE.AdditiveBlending}
+          side={THREE.BackSide}
         />
       </mesh>
     </>
@@ -69,26 +69,30 @@ function Nodes({ radius = 2 }) {
 
   return (
     <points geometry={points}>
-      <pointsMaterial size={0.03} color="#39FF14" />
+      <pointsMaterial size={0.035} color="#39FF14" />
     </points>
   )
 }
 
 export default function NetworkGlobe({ initialRotationY = 0 }) {
+  const isMobile = useMediaQuery({ maxWidth: 768 })
 
-  const [shouldAnimate, setShouldAnimate] = useState(false)
   return (
     <Canvas
-  className="absolute inset-0 z-0"
-  dpr={1}
-  camera={{ position: [0, 0, 5], fov: 45 }}
-  frameloop="always" // ✅ keep this
->
+      className="absolute inset-0 z-0"
+      dpr={1}
+      camera={{
+        position: isMobile ? [0, 0, 3.3] : [0, 0, 5],
+        fov: isMobile ? 36 : 45
+      }}
+      frameloop="always"
+    >
+      {/* ✨ Space Stars */}
+      <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={1} />
 
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[5, 3, 5]} intensity={1.2} />
+      <ambientLight intensity={0.55} />
+      <directionalLight position={[5, 3, 5]} intensity={1.1} />
 
-      {/* Your globe + nodes */}
       <Globe initialRotationY={initialRotationY} />
       <Nodes />
 
@@ -96,7 +100,7 @@ export default function NetworkGlobe({ initialRotationY = 0 }) {
         enableZoom={false}
         enablePan={false}
         autoRotate
-        autoRotateSpeed={0.3}
+        autoRotateSpeed={0.25}
       />
     </Canvas>
   )
