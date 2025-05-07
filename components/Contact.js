@@ -64,7 +64,7 @@ export default function Contact() {
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/50 to-black/80 pointer-events-none z-10">
         <ProjectsBackground />
       </div>
-      <div className="absolute inset-0 bg-black/70 pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-black/20 pointer-events-none z-10" />
 
       {/* 🧩 Center Section (fills space) */}
       <div className="relative z-30 flex flex-col md:flex-row items-center justify-center flex-grow px-6 py-10 gap-10 md:gap-12 lg:gap-20">
