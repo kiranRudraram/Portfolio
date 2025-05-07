@@ -84,7 +84,7 @@ export default function Contact() {
             Establish a Secure Connection
           </h2>
           <p className="text-center text-gray-400 mb-8">
-            Let's build resilient systems and safer futures. I'm just a message away.
+          Let&apos;s build resilient systems and safer futures. I&apos;m just a message away.
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
