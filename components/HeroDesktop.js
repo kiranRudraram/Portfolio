@@ -1,4 +1,3 @@
-// components/HeroDesktop.js
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import NetworkGlobe from './NetworkGlobe'
@@ -8,10 +7,16 @@ import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline'
 export default function HeroDesktop() {
   const [taglineUnlocked, setTaglineUnlocked] = useState(false)
   const [showStatus, setShowStatus] = useState(false)
+  const [readyToDecrypt, setReadyToDecrypt] = useState(false)
 
   const tagline =
     'Cybersecurity Analyst | AppSec | Cloud Security | Vulnerability & Risk Mgmt'
   const revealDelay = Math.floor(2000 / tagline.length)
+
+  useEffect(() => {
+    const t = setTimeout(() => setReadyToDecrypt(true), 300)
+    return () => clearTimeout(t)
+  }, [])
 
   useEffect(() => {
     let timer
@@ -66,44 +71,42 @@ export default function HeroDesktop() {
         }}
         className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center space-y-6"
       >
-        <DecryptText
-          text="Sai Kiran Rudraram"
-          scrambleSpeed={50}
-          revealDelay={180}
-          className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white"
-        />
+        {readyToDecrypt && (
+          <DecryptText
+            text="Sai Kiran Rudraram"
+            scrambleSpeed={50}
+            revealDelay={180}
+            className="text-5xl sm:text-6xl md:text-7xl font-extrabold text-white"
+          />
+        )}
 
-        <div className="flex items-center space-x-4">
-          {!taglineUnlocked ? (
-            <LockClosedIcon
-              onClick={() => setTaglineUnlocked(true)}
-              className="w-8 h-8 text-[#1E90FF] cursor-pointer animate-pulse hover:animate-bounce transition"
-            />
-          ) : (
-            <LockOpenIcon
-              onClick={() => setTaglineUnlocked(false)}
-              className="w-8 h-8 text-[#39FF14] cursor-pointer hover:scale-110 transition"
-            />
-          )}
-
-          {!taglineUnlocked ? (
-            <motion.span
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.4 }}
-              className="px-4 py-2 bg-white/10 rounded uppercase font-semibold text-white"
-            >
-              UNLOCK ME
-            </motion.span>
-          ) : (
-            <DecryptText
-              text={tagline}
-              scrambleSpeed={50}
-              revealDelay={revealDelay}
-              className="text-xl sm:text-2xl font-medium text-white"
-            />
-          )}
-        </div>
+        {readyToDecrypt && (
+          <div className="flex items-center space-x-4">
+            {!taglineUnlocked ? (
+              <>
+                <LockClosedIcon
+                  onClick={() => setTaglineUnlocked(true)}
+                  className="w-8 h-8 text-[#1E90FF] cursor-pointer animate-pulse hover:animate-bounce transition"
+                />
+                <motion.span
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.4 }}
+                  className="px-4 py-2 bg-white/10 rounded uppercase font-semibold text-white"
+                >
+                  UNLOCK ME
+                </motion.span>
+              </>
+            ) : (
+              <DecryptText
+                text={tagline}
+                scrambleSpeed={50}
+                revealDelay={revealDelay}
+                className="text-xl sm:text-2xl font-medium text-white"
+              />
+            )}
+          </div>
+        )}
 
         {showStatus && (
           <motion.p

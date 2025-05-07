@@ -3,6 +3,7 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, useTexture } from '@react-three/drei'
 import { useRef, useMemo, useEffect } from 'react'
 import * as THREE from 'three'
+import { useState } from 'react'
 
 function Globe({ radius = 2, initialRotationY = 0 }) {
   const mesh = useRef()
@@ -16,6 +17,7 @@ function Globe({ radius = 2, initialRotationY = 0 }) {
   })
 
   const earthMap = useTexture('/textures/earth.jpg')
+
 
   return (
     <>
@@ -73,12 +75,16 @@ function Nodes({ radius = 2 }) {
 }
 
 export default function NetworkGlobe({ initialRotationY = 0 }) {
+
+  const [shouldAnimate, setShouldAnimate] = useState(false)
   return (
     <Canvas
-      className="absolute inset-0 z-0"
-      dpr={1}
-      camera={{ position: [0, 0, 5], fov: 45 }}
-    >
+  className="absolute inset-0 z-0"
+  dpr={1}
+  camera={{ position: [0, 0, 5], fov: 45 }}
+  frameloop="always" // ✅ keep this
+>
+
       <ambientLight intensity={0.5} />
       <directionalLight position={[5, 3, 5]} intensity={1.2} />
 
