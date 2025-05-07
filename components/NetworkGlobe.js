@@ -1,107 +1,109 @@
-// components/NetworkGlobe.js
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls, useTexture, Stars } from '@react-three/drei'
-import { useRef, useMemo, useEffect } from 'react'
-import * as THREE from 'three'
-import { useMediaQuery } from 'react-responsive'
+import { useState, useEffect } from 'react'
+import { motion } from 'framer-motion'
+import NetworkGlobe from './NetworkGlobe'
+import DecryptText from './DecryptText'
+import { LockClosedIcon, LockOpenIcon } from '@heroicons/react/24/outline'
 
-function Globe({ radius = 2, initialRotationY = 0 }) {
-  const mesh = useRef()
+export default function HeroMobile() {
+  const [taglineUnlocked, setTaglineUnlocked] = useState(false)
+  const [allowLine2, setAllowLine2] = useState(false)
+  const [showStatus, setShowStatus] = useState(false)
+  const [readyToDecrypt, setReadyToDecrypt] = useState(false)
+
+  const taglineLine1 = 'Cybersecurity Analyst | AppSec | Cloud Security'
+  const taglineLine2 = 'Vulnerability & Risk Mgmt'
+  const scrambleSpeed = 60
 
   useEffect(() => {
-    if (mesh.current) mesh.current.rotation.y = initialRotationY
-  }, [initialRotationY])
+    const t = setTimeout(() => setReadyToDecrypt(true), 300)
+    return () => clearTimeout(t)
+  }, [])
 
-  useFrame((_, delta) => {
-    mesh.current.rotation.y += delta * 0.1
-  })
+  function handleLine1Done() {
+    setAllowLine2(true)
+  }
 
-  const earthMap = useTexture('/textures/earth.jpg')
+  function handleLine2Done() {
+    setTimeout(() => setShowStatus(true), 400)
+  }
 
-  return (
-    <>
-      {/* 🌍 Earth */}
-      <mesh ref={mesh}>
-        <sphereGeometry args={[radius, 64, 64]} />
-        <meshPhongMaterial
-          map={earthMap}
-          shininess={6}
-          specular={new THREE.Color('gray')}
-        />
-      </mesh>
-
-      {/* 🟢 Soft Glow Halo */}
-      <mesh>
-        <sphereGeometry args={[radius + 0.1, 64, 64]} />
-        <meshBasicMaterial
-          color="#39FF14"
-          transparent
-          opacity={0.04}
-          blending={THREE.AdditiveBlending}
-          side={THREE.BackSide}
-        />
-      </mesh>
-    </>
-  )
-}
-
-function Nodes({ radius = 2 }) {
-  const points = useMemo(() => {
-    const verts = []
-    for (let i = 0; i < 100; i++) {
-      const u = Math.random()
-      const v = Math.random()
-      const θ = 2 * Math.PI * u
-      const φ = Math.acos(2 * v - 1)
-      verts.push(
-        radius * Math.sin(φ) * Math.cos(θ),
-        radius * Math.cos(φ),
-        radius * Math.sin(φ) * Math.sin(θ)
-      )
-    }
-    const geom = new THREE.BufferGeometry()
-    geom.setAttribute(
-      'position',
-      new THREE.Float32BufferAttribute(new Float32Array(verts), 3)
-    )
-    return geom
-  }, [radius])
+  function resetState() {
+    setTaglineUnlocked(false)
+    setAllowLine2(false)
+    setShowStatus(false)
+  }
 
   return (
-    <points geometry={points}>
-      <pointsMaterial size={0.035} color="#39FF14" />
-    </points>
-  )
-}
+    <section className="relative min-h-screen w-full overflow-hidden text-white flex flex-col items-center justify-center px-4 pt-10 pb-8 text-center">
+      <div className="absolute inset-0 scale-[1.2] sm:scale-[1.6] opacity-50">
+        <NetworkGlobe />
+      </div>
 
-export default function NetworkGlobe({ initialRotationY = 0 }) {
-  const isMobile = useMediaQuery({ maxWidth: 768 })
+      <div className="z-20 space-y-6">
+        {readyToDecrypt && (
+          <DecryptText
+            text="Sai Kiran Rudraram"
+            scrambleSpeed={50}
+            revealDelay={180}
+            className="text-3xl font-extrabold text-white"
+          />
+        )}
 
-  return (
-    <Canvas
-      className="absolute inset-0 z-0"
-      dpr={1}
-      camera={{
-        position: isMobile ? [0, 0, 3.3] : [0, 0, 5],
-        fov: isMobile ? 36 : 45
-      }}
-      frameloop="always"
-    >
-      {/* ✨ Space Stars */}
-      <Stars radius={100} depth={50} count={3000} factor={4} saturation={0} fade speed={1} />
+        {readyToDecrypt && !taglineUnlocked ? (
+          <div className="flex items-center justify-center space-x-3">
+            <LockClosedIcon
+              onClick={() => setTaglineUnlocked(true)}
+              className="w-6 h-6 text-blue-400 cursor-pointer animate-pulse"
+            />
+            <motion.span
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.4 }}
+              className="px-3 py-1 bg-white/10 rounded text-sm font-semibold"
+            >
+              UNLOCK ME
+            </motion.span>
+          </div>
+        ) : null}
 
-      <ambientLight intensity={0.55} />
-      <directionalLight position={[5, 3, 5]} intensity={1.1} />
+        {taglineUnlocked && (
+          <div className="flex flex-col items-center space-y-2">
+            <div className="flex items-center space-x-2">
+              <LockOpenIcon
+                onClick={resetState}
+                className="w-5 h-5 text-green-400 cursor-pointer"
+              />
+              <DecryptText
+                text={taglineLine1}
+                scrambleSpeed={scrambleSpeed}
+                revealDelay={130}
+                className="text-sm font-medium text-white"
+                onComplete={handleLine1Done}
+              />
+            </div>
+            {allowLine2 && (
+              <DecryptText
+                text={taglineLine2}
+                scrambleSpeed={scrambleSpeed}
+                revealDelay={0}
+                className="text-sm font-medium text-white"
+                onComplete={handleLine2Done}
+              />
+            )}
+          </div>
+        )}
 
-      <Globe initialRotationY={initialRotationY} />
-      <Nodes />
-
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate
-        autoRotateSpeed={0.25}
-      />
-    </Canvas>
+        {showStatus && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-4 text-xs text-green-400"
+          >
+            🚀 Actively looking for Cyber Roles | Based in TX, USA
+          </motion.p>
+        )}
+      </div>
+    </section>
   )
 }
